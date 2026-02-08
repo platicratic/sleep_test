@@ -12,7 +12,7 @@ class SleepController(private val sleepService: SleepService) : SleepApi {
         sleepService.createSleep(userId, sleepCreationDto)
     }
 
-    override fun getLastNightSleep(): SleepDto {
-        return sleepService.getLastNightSleepData()
+    override fun getLastNightSleep(userId: Long): SleepDto {
+        return sleepService.getLastNightSleepData(userId)
     }
 }

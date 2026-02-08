@@ -35,5 +35,5 @@ data class SleepLogEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    val user: UserEntity
+    val user: UserEntity? = null,
 )

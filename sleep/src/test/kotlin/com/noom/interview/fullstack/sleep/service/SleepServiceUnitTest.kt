@@ -35,7 +35,9 @@ class SleepServiceUnitTest {
     @Test
     fun testGetLastNightSleep() {
         // given
-        every { sleepLogRepository.findAll() } returns listOf(
+        every { userRepository.existsById(any()) } returns true
+        every { userRepository.getReferenceById(any()) } returns USER1
+        every { sleepLogRepository.findAllByUserId(any()) } returns listOf(
             SleepLogEntity(
                 id = 1,
                 startSleep = Instant.parse("2026-02-06T23:00:00Z"),
@@ -53,7 +55,7 @@ class SleepServiceUnitTest {
         )
 
         // when
-        val lastNightSleep: SleepDto = sleepService.getLastNightSleepData()
+        val lastNightSleep: SleepDto = sleepService.getLastNightSleepData(1)
 
         // then
         Assertions.assertEquals(Instant.parse("2026-02-09T08:10:00Z"), lastNightSleep.date)

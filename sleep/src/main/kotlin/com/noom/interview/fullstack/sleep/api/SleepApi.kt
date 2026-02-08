@@ -15,5 +15,5 @@ interface SleepApi {
     )
 
     @GetMapping("api/sleep")
-    fun getLastNightSleep(): SleepDto
+    fun getLastNightSleep(@RequestParam("user_id") userId: Long,): SleepDto
 }

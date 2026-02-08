@@ -50,6 +50,6 @@ class SleepServiceIntegrationTest {
         Assertions.assertEquals(Instant.parse("2026-02-07T22:00:00Z"), sleepLogEntity.startSleep)
         Assertions.assertEquals(Instant.parse("2026-02-08T10:30:00Z"), sleepLogEntity.endSleep)
         Assertions.assertEquals(MorningMoodType.OK, sleepLogEntity.morningMood)
-        Assertions.assertEquals("lName", sleepLogEntity.user.lastName)
+        Assertions.assertEquals("lName", sleepLogEntity.user?.lastName)
     }
 }
