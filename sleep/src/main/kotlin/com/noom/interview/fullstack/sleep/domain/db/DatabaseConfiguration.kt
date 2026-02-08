@@ -1,6 +1,6 @@
-package com.noom.interview.fullstack.sleep.db
+package com.noom.interview.fullstack.sleep.domain.db
 
-import com.noom.interview.fullstack.sleep.SleepApplication.Companion.UNIT_TEST_PROFILE
+import com.noom.interview.fullstack.sleep.server.SleepApplication.Companion.UNIT_TEST_PROFILE
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.jdbc.DataSourceBuilder
 import org.springframework.context.annotation.Bean
