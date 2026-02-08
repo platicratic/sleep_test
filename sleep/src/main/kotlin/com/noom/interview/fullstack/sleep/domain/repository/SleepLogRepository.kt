@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface SleepLogRepository: JpaRepository<SleepLogEntity, Long>
+interface SleepLogRepository: JpaRepository<SleepLogEntity, Long> {
+    fun findAllByUserId(userId: Long): List<SleepLogEntity>
+}

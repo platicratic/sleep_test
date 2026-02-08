@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class SleepController(private val sleepService: SleepService) : SleepApi {
-    override fun createSleep(sleepCreationDto: SleepCreationDto) {
-        sleepService.createSleep(sleepCreationDto)
+    override fun createSleep(userId: Long, sleepCreationDto: SleepCreationDto) {
+        sleepService.createSleep(userId, sleepCreationDto)
     }
 
-    override fun getLastNightSleep(): SleepDto {
-        return sleepService.getLastNightSleepData()
+    override fun getLastNightSleep(userId: Long): SleepDto {
+        return sleepService.getLastNightSleepData(userId)
     }
 }
