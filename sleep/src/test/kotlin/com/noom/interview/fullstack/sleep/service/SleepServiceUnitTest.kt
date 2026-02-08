@@ -2,8 +2,10 @@ package com.noom.interview.fullstack.sleep.service
 
 import com.noom.interview.fullstack.sleep.api.dto.SleepDto
 import com.noom.interview.fullstack.sleep.domain.entity.SleepLogEntity
+import com.noom.interview.fullstack.sleep.domain.entity.UserEntity
 import com.noom.interview.fullstack.sleep.domain.enumeration.MorningMoodType
 import com.noom.interview.fullstack.sleep.domain.repository.SleepLogRepository
+import com.noom.interview.fullstack.sleep.domain.repository.UserRepository
 import com.noom.interview.fullstack.sleep.server.SleepApplication
 import com.noom.interview.fullstack.sleep.server.SleepApplication.Companion.UNIT_TEST_PROFILE
 import com.noom.interview.fullstack.sleep.service.service.SleepService
@@ -22,8 +24,13 @@ import java.time.Instant
 @ActiveProfiles(UNIT_TEST_PROFILE)
 @ContextConfiguration(classes = [SleepApplication::class])
 class SleepServiceUnitTest {
+    private val userRepository: UserRepository = mockk()
     private val sleepLogRepository: SleepLogRepository = mockk()
-    private val sleepService = SleepService(sleepLogRepository)
+    private val sleepService = SleepService(userRepository, sleepLogRepository)
+
+    companion object {
+        private val USER1 = UserEntity(id = 1, firstName = "fName", lastName = "lName")
+    }
 
     @Test
     fun testGetLastNightSleep() {
@@ -33,13 +40,15 @@ class SleepServiceUnitTest {
                 id = 1,
                 startSleep = Instant.parse("2026-02-06T23:00:00Z"),
                 endSleep = Instant.parse("2026-02-07T06:00:00Z"),
-                morningMood = MorningMoodType.BAD
+                morningMood = MorningMoodType.BAD,
+                user = USER1
             ),
             SleepLogEntity(
                 id = 1,
                 startSleep = Instant.parse("2026-02-08T22:00:00Z"),
                 endSleep = Instant.parse("2026-02-09T08:10:00Z"),
-                morningMood = MorningMoodType.GOOD
+                morningMood = MorningMoodType.GOOD,
+                user = USER1
             )
         )
 
