@@ -1,5 +1,6 @@
 package com.noom.interview.fullstack.sleep.service
 
+import com.noom.interview.fullstack.sleep.api.dto.SleepCreationDto
 import com.noom.interview.fullstack.sleep.api.dto.SleepDto
 import com.noom.interview.fullstack.sleep.domain.entity.SleepLogEntity
 import com.noom.interview.fullstack.sleep.domain.entity.UserEntity
@@ -13,10 +14,12 @@ import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -103,5 +106,29 @@ class SleepServiceUnitTest {
 
         // then
         Assertions.assertEquals(mapOf(MorningMoodType.BAD to 3, MorningMoodType.OK to 1, MorningMoodType.GOOD to 0), moodMap)
+    }
+
+    @Test
+    fun testValidationOfExistingSleepLog() {
+        // given
+        val sleepCreationDto = SleepCreationDto(
+            timeInBedStart = Instant.parse("2026-02-10T22:00:00Z"),
+            timeInBedEnd = Instant.parse("2026-02-11T09:30:00Z"),
+            morningMoodType = MorningMoodType.OK,
+        )
+        every { sleepLogRepository.findByUserIdAndBetweenRanges(any(), any(), any()) } returns listOf(
+            SleepLogEntity(
+                id = 1,
+                startSleep = LocalDateTime.parse("2026-02-06T23:00:00"),
+                endSleep = LocalDateTime.parse("2026-02-07T06:00:00"),
+                morningMood = MorningMoodType.BAD,
+                user = USER1
+            ),
+        )
+
+        // when + then
+        assertThrows<IllegalArgumentException> {
+            sleepService.validateExistingSleepLog(1, sleepCreationDto)
+        }
     }
 }
