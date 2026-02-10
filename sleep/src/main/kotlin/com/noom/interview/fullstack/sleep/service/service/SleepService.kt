@@ -9,7 +9,9 @@ import com.noom.interview.fullstack.sleep.domain.enumeration.MorningMoodType
 import com.noom.interview.fullstack.sleep.domain.repository.SleepLogRepository
 import com.noom.interview.fullstack.sleep.domain.repository.UserRepository
 import com.noom.interview.fullstack.sleep.service.mapper.toDto
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import java.time.*
 
 @Service
@@ -19,6 +21,7 @@ class SleepService(
 ) {
     fun createSleep(userId: Long, sleepCreationDto: SleepCreationDto): SleepLogEntity {
         val user: UserEntity = findUserById(userId)
+        validateExistingSleepLog(userId, sleepCreationDto)
 
         return sleepLogRepository.save(
             SleepLogEntity(
@@ -29,6 +32,22 @@ class SleepService(
                 user = user,
             )
         )
+    }
+
+    fun findSleepLogsOfDate(userId: Long, date: LocalDate): List<SleepLogEntity> {
+        val dateRangeStart = date.atStartOfDay()
+        val dateRangeEnd = date.plusDays(1).atStartOfDay().minusNanos(1)
+
+        return sleepLogRepository.findByUserIdAndBetweenRanges(userId = userId, dateRangeStart, dateRangeEnd)
+    }
+
+    fun validateExistingSleepLog(userId: Long, sleepCreationDto: SleepCreationDto) {
+        val date = LocalDate.ofInstant(sleepCreationDto.timeInBedEnd, ZoneOffset.UTC)
+        val existingSleepLogs = findSleepLogsOfDate(userId = userId, date = date)
+
+        if (existingSleepLogs.isNotEmpty()) {
+            throw IllegalArgumentException("There is already an existing sleep log at this day.")
+        }
     }
 
     fun getLastNightSleepData(userId: Long): SleepDto {
