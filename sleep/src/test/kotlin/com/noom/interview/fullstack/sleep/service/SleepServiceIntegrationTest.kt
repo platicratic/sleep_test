@@ -16,6 +16,7 @@ import org.springframework.context.annotation.ComponentScan
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import java.time.Instant
+import java.time.LocalDateTime
 
 @DataJpaTest
 @ActiveProfiles(INTEGRATION_TEST_PROFILE)
@@ -47,8 +48,8 @@ class SleepServiceIntegrationTest {
 
         // then
         Assertions.assertTrue(sleepLogEntity.id > 0)
-        Assertions.assertEquals(Instant.parse("2026-02-07T22:00:00Z"), sleepLogEntity.startSleep)
-        Assertions.assertEquals(Instant.parse("2026-02-08T10:30:00Z"), sleepLogEntity.endSleep)
+        Assertions.assertEquals(LocalDateTime.parse("2026-02-07T22:00:00"), sleepLogEntity.startSleep)
+        Assertions.assertEquals(LocalDateTime.parse("2026-02-08T10:30:00"), sleepLogEntity.endSleep)
         Assertions.assertEquals(MorningMoodType.OK, sleepLogEntity.morningMood)
         Assertions.assertEquals("lName", sleepLogEntity.user?.lastName)
     }

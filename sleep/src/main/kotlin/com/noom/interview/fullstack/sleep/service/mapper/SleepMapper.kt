@@ -7,7 +7,7 @@ import java.time.Duration
 
 fun SleepLogEntity.toDto(duration: Duration): SleepDto {
     return SleepDto(
-        date = this.endSleep,
+        date = this.endSleep.toLocalDate(),
         timeInBed = duration,
         timeInBedStart = this.startSleep,
         timeInBedEnd = this.endSleep,
