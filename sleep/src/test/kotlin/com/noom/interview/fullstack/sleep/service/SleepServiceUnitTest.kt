@@ -16,11 +16,11 @@ import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
-import java.sql.Date
 import java.time.Duration
-import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 
-@SpringBootTest
 @ActiveProfiles(UNIT_TEST_PROFILE)
 @ContextConfiguration(classes = [SleepApplication::class])
 class SleepServiceUnitTest {
@@ -40,15 +40,15 @@ class SleepServiceUnitTest {
         every { sleepLogRepository.findAllByUserId(any()) } returns listOf(
             SleepLogEntity(
                 id = 1,
-                startSleep = Instant.parse("2026-02-06T23:00:00Z"),
-                endSleep = Instant.parse("2026-02-07T06:00:00Z"),
+                startSleep = LocalDateTime.parse("2026-02-06T23:00:00"),
+                endSleep = LocalDateTime.parse("2026-02-07T06:00:00"),
                 morningMood = MorningMoodType.BAD,
                 user = USER1
             ),
             SleepLogEntity(
                 id = 1,
-                startSleep = Instant.parse("2026-02-08T22:00:00Z"),
-                endSleep = Instant.parse("2026-02-09T08:10:00Z"),
+                startSleep = LocalDateTime.parse("2026-02-08T22:00:00"),
+                endSleep = LocalDateTime.parse("2026-02-09T08:10:00"),
                 morningMood = MorningMoodType.GOOD,
                 user = USER1
             )
@@ -58,10 +58,50 @@ class SleepServiceUnitTest {
         val lastNightSleep: SleepDto = sleepService.getLastNightSleepData(1)
 
         // then
-        Assertions.assertEquals(Instant.parse("2026-02-09T08:10:00Z"), lastNightSleep.date)
+        Assertions.assertEquals(LocalDate.parse("2026-02-09"), lastNightSleep.date)
         Assertions.assertEquals(Duration.ofMinutes(610), lastNightSleep.timeInBed)
-        Assertions.assertEquals(Instant.parse("2026-02-08T22:00:00Z"), lastNightSleep.timeInBedStart)
-        Assertions.assertEquals(Instant.parse("2026-02-09T08:10:00Z"), lastNightSleep.timeInBedEnd)
+        Assertions.assertEquals(LocalDateTime.parse("2026-02-08T22:00:00"), lastNightSleep.timeInBedStart)
+        Assertions.assertEquals(LocalDateTime.parse("2026-02-09T08:10:00"), lastNightSleep.timeInBedEnd)
         Assertions.assertEquals(MorningMoodType.GOOD, lastNightSleep.morningMoodType)
+    }
+
+    @Test
+    fun testCalculateAverageFromDuration() {
+        // given
+        val durations = listOf(Duration.ofMinutes(50), Duration.ofMinutes(10), Duration.ofMinutes(30))
+
+        // when
+        val duration: Duration = sleepService.calculateAverage(durations)
+
+        // then
+        Assertions.assertEquals(Duration.ofMinutes(30), duration)
+    }
+
+    @Test
+    fun testCalculateAverageFromLocalDateTime() {
+        // given
+        val times = listOf(
+            LocalDateTime.of(2026, 1, 1, 8, 30),
+            LocalDateTime.of(2026, 1, 10, 7, 20),
+            LocalDateTime.of(2026, 1, 7, 9, 10),
+        )
+
+        // when
+        val time: LocalTime = sleepService.calculateAverage(times)
+
+        // then
+        Assertions.assertEquals(LocalTime.of(8, 20), time)
+    }
+
+    @Test
+    fun testCalculateMoodFrequency() {
+        // given
+        val moods = listOf(MorningMoodType.BAD, MorningMoodType.OK, MorningMoodType.BAD, MorningMoodType.BAD)
+
+        // when
+        val moodMap: Map<MorningMoodType, Int>  = sleepService.calculateMoodFrequency(moods)
+
+        // then
+        Assertions.assertEquals(mapOf(MorningMoodType.BAD to 3, MorningMoodType.OK to 1, MorningMoodType.GOOD to 0), moodMap)
     }
 }

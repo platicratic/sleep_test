@@ -2,6 +2,7 @@ package com.noom.interview.fullstack.sleep.domain.entity
 
 import com.noom.interview.fullstack.sleep.domain.enumeration.MorningMoodType
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZonedDateTime
 import javax.persistence.Column
@@ -24,10 +25,10 @@ data class SleepLogEntity(
     val id: Long = 0,
 
     @Column(nullable = false)
-    val startSleep: Instant = Instant.now(),
+    val startSleep: LocalDateTime = LocalDateTime.now(),
 
     @Column(nullable = false)
-    val endSleep: Instant = Instant.now(),
+    val endSleep: LocalDateTime = LocalDateTime.now(),
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

@@ -1,6 +1,7 @@
 package com.noom.interview.fullstack.sleep.server.controller
 
 import com.noom.interview.fullstack.sleep.api.SleepApi
+import com.noom.interview.fullstack.sleep.api.dto.SleepAverageDto
 import com.noom.interview.fullstack.sleep.api.dto.SleepCreationDto
 import com.noom.interview.fullstack.sleep.api.dto.SleepDto
 import com.noom.interview.fullstack.sleep.service.service.SleepService
@@ -14,5 +15,9 @@ class SleepController(private val sleepService: SleepService) : SleepApi {
 
     override fun getLastNightSleep(userId: Long): SleepDto {
         return sleepService.getLastNightSleepData(userId)
+    }
+
+    override fun getSleepAverages(userId: Long, days: Long): SleepAverageDto {
+        return sleepService.getSleepAverages(userId, days)
     }
 }
