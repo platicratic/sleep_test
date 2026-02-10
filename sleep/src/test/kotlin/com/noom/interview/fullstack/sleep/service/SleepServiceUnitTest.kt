@@ -19,6 +19,7 @@ import org.springframework.test.context.ContextConfiguration
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 @SpringBootTest
 @ActiveProfiles(UNIT_TEST_PROFILE)
@@ -27,10 +28,6 @@ class SleepServiceUnitTest {
     private val userRepository: UserRepository = mockk()
     private val sleepLogRepository: SleepLogRepository = mockk()
     private val sleepService = SleepService(userRepository, sleepLogRepository)
-
-    companion object {
-        private val USER1 = UserEntity(id = 1, firstName = "fName", lastName = "lName")
-    }
 
     @Test
     fun testGetLastNightSleep() {
@@ -63,5 +60,61 @@ class SleepServiceUnitTest {
         Assertions.assertEquals(LocalDateTime.parse("2026-02-08T22:00:00"), lastNightSleep.timeInBedStart)
         Assertions.assertEquals(LocalDateTime.parse("2026-02-09T08:10:00"), lastNightSleep.timeInBedEnd)
         Assertions.assertEquals(MorningMoodType.GOOD, lastNightSleep.morningMoodType)
+    }
+
+    @Test
+    fun testCalculateAverageFromDuration() {
+        // given
+        val durations = listOf(Duration.ofMinutes(50), Duration.ofMinutes(10), Duration.ofMinutes(30))
+
+        // when
+        val duration: Duration = sleepService.calculateAverage(durations)
+
+        // then
+        Assertions.assertEquals(Duration.ofMinutes(30), duration)
+    }
+
+    @Test
+    fun testCalculateAverageFromLocalDateTime() {
+        // given
+        val times = listOf(
+            LocalDateTime.of(2026, 1, 1, 8, 30),
+            LocalDateTime.of(2026, 1, 10, 7, 20),
+            LocalDateTime.of(2026, 1, 7, 9, 10),
+        )
+
+        // when
+        val time: LocalTime = sleepService.calculateAverage(times)
+
+        // then
+        Assertions.assertEquals(LocalTime.of(8, 20), time)
+    }
+
+    @Test
+    fun testCalculateMoodFrequency() {
+        // given
+        val moods = listOf(MorningMoodType.BAD, MorningMoodType.OK, MorningMoodType.BAD, MorningMoodType.BAD)
+
+        // when
+        val moodMap: Map<MorningMoodType, Int>  = sleepService.calculateMoodFrequency(moods)
+
+        // then
+        Assertions.assertEquals(mapOf(MorningMoodType.BAD to 3, MorningMoodType.OK to 1, MorningMoodType.GOOD to 0), moodMap)
+    }
+
+    /*@Test TODO create a multi test
+    fun testSleepAverages() {
+        // given
+
+        // when
+        val sleepAverageDto: SleepAverageDto = sleepService.getSleepAverages(1, 30)
+
+        // then
+    }*/
+
+
+    companion object {
+        private val USER1 = UserEntity(id = 1, firstName = "fName", lastName = "lName")
+
     }
 }
