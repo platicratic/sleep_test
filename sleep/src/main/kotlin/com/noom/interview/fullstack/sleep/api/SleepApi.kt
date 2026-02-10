@@ -25,5 +25,8 @@ interface SleepApi {
      *   @param days number of last days averages, if omitted it defaults to last 30 days averages
      */
     @GetMapping("api/sleep-averages")
-    fun getSleepAverages(@RequestParam("user_id") userId: Long, @RequestParam("days", defaultValue = "30") days: Long): SleepAverageDto
+    fun getSleepAverages(
+        @RequestParam("user_id") userId: Long,
+        @RequestParam("days", defaultValue = "30") days: Long
+    ): SleepAverageDto
 }
