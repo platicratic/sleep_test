@@ -40,14 +40,7 @@ class SleepServiceUnitTest {
         // given
         every { userRepository.existsById(any()) } returns true
         every { userRepository.getReferenceById(any()) } returns USER1
-        every { sleepLogRepository.findAllByUserId(any()) } returns listOf(
-            SleepLogEntity(
-                id = 1,
-                startSleep = LocalDateTime.parse("2026-02-06T23:00:00"),
-                endSleep = LocalDateTime.parse("2026-02-07T06:00:00"),
-                morningMood = MorningMoodType.BAD,
-                user = USER1
-            ),
+        every { sleepLogRepository.findByUserIdAndBetweenRanges(any(), any(), any()) } returns listOf(
             SleepLogEntity(
                 id = 1,
                 startSleep = LocalDateTime.parse("2026-02-08T22:00:00"),

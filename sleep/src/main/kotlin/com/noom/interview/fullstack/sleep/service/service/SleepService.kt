@@ -9,9 +9,7 @@ import com.noom.interview.fullstack.sleep.domain.enumeration.MorningMoodType
 import com.noom.interview.fullstack.sleep.domain.repository.SleepLogRepository
 import com.noom.interview.fullstack.sleep.domain.repository.UserRepository
 import com.noom.interview.fullstack.sleep.service.mapper.toDto
-import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
 import java.time.*
 
 @Service
@@ -53,12 +51,18 @@ class SleepService(
     fun getLastNightSleepData(userId: Long): SleepDto {
         val user: UserEntity = findUserById(userId)
 
-        val lastSleepLog: SleepLogEntity? = sleepLogRepository.findAllByUserId(user.id).maxByOrNull { it.endSleep }
-        if (lastSleepLog == null) {
-            throw NoSuchElementException("Could not find any sleep data of last night for user: ${user.id}")
+        val date = LocalDate.now(ZoneOffset.UTC)
+        val lastSleepLogs: List<SleepLogEntity> = findSleepLogsOfDate(userId, date)
+        if (lastSleepLogs.isEmpty()) {
+            throw NoSuchElementException(
+                "Could not find any sleep data of last night (${date}) for user: ${user.id}. " +
+                        "Please create a sleep log for last night and try again."
+            )
+        } else if (lastSleepLogs.size > 1) {
+            throw Exception("To many sleep logs for last night sleep for user: ${user.id}")
         }
 
-        return lastSleepLog.toDto(calculateTimeInBed(lastSleepLog))
+        return lastSleepLogs.single().toDto(calculateTimeInBed(lastSleepLogs.single()))
     }
 
     fun getSleepAverages(userId: Long, days: Long): SleepAverageDto {
@@ -89,8 +93,8 @@ class SleepService(
     fun calculateAverage(items: List<LocalDateTime>): LocalTime {
         return LocalTime.ofSecondOfDay(
             items
-            .map {it.toLocalTime().toSecondOfDay() }
-            .fold(0) { acc, item -> acc + item } / items.size.toLong())
+                .map { it.toLocalTime().toSecondOfDay() }
+                .fold(0) { acc, item -> acc + item } / items.size.toLong())
     }
 
     fun calculateMoodFrequency(moods: List<MorningMoodType>): Map<MorningMoodType, Int> {
