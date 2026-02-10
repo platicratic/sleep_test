@@ -21,13 +21,16 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-@SpringBootTest
 @ActiveProfiles(UNIT_TEST_PROFILE)
 @ContextConfiguration(classes = [SleepApplication::class])
 class SleepServiceUnitTest {
     private val userRepository: UserRepository = mockk()
     private val sleepLogRepository: SleepLogRepository = mockk()
     private val sleepService = SleepService(userRepository, sleepLogRepository)
+
+    companion object {
+        private val USER1 = UserEntity(id = 1, firstName = "fName", lastName = "lName")
+    }
 
     @Test
     fun testGetLastNightSleep() {
@@ -100,21 +103,5 @@ class SleepServiceUnitTest {
 
         // then
         Assertions.assertEquals(mapOf(MorningMoodType.BAD to 3, MorningMoodType.OK to 1, MorningMoodType.GOOD to 0), moodMap)
-    }
-
-    /*@Test TODO create a multi test
-    fun testSleepAverages() {
-        // given
-
-        // when
-        val sleepAverageDto: SleepAverageDto = sleepService.getSleepAverages(1, 30)
-
-        // then
-    }*/
-
-
-    companion object {
-        private val USER1 = UserEntity(id = 1, firstName = "fName", lastName = "lName")
-
     }
 }
