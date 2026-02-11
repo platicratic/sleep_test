@@ -91,10 +91,15 @@ class SleepService(
     }
 
     fun calculateAverage(items: List<LocalDateTime>): LocalTime {
-        return LocalTime.ofSecondOfDay(
-            items
-                .map { it.toLocalTime().toSecondOfDay() }
-                .fold(0) { acc, item -> acc + item } / items.size.toLong())
+        val itemsInSeconds: List<Long> = items.map {
+            val seconds = it.toLocalTime().toSecondOfDay().toLong()
+            if (seconds < HOURS12) seconds + HOURS24 else seconds
+        }
+
+        val avg = itemsInSeconds
+            .fold(0) { acc: Long, item: Long -> acc + item } / items.size.toLong() % HOURS24
+
+        return LocalTime.ofSecondOfDay(avg)
     }
 
     fun calculateMoodFrequency(moods: List<MorningMoodType>): Map<MorningMoodType, Int> {
@@ -110,5 +115,10 @@ class SleepService(
 
     private fun calculateTimeInBed(sleepLog: SleepLogEntity): Duration {
         return Duration.between(sleepLog.startSleep, sleepLog.endSleep)
+    }
+
+    companion object {
+        const val HOURS24: Long = 24 * 60 * 60
+        const val HOURS12: Long = 12 * 60 * 60
     }
 }
