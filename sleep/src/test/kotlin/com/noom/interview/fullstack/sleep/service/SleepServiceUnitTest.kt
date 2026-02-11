@@ -90,6 +90,38 @@ class SleepServiceUnitTest {
     }
 
     @Test
+    fun testCalculateAverageFromLocalDateTimeOverNight1() {
+        // given
+        val times = listOf(
+            LocalDateTime.of(2026, 1, 1, 22, 0),
+            LocalDateTime.of(2026, 1, 2, 2, 0),
+            LocalDateTime.of(2026, 1, 2, 3, 0),
+        )
+
+        // when
+        val time: LocalTime = sleepService.calculateAverage(times)
+
+        // then
+        Assertions.assertEquals(LocalTime.of(1, 0), time)
+    }
+
+    @Test
+    fun testCalculateAverageFromLocalDateTimeOverNight2() {
+        // given
+        val times = listOf(
+            LocalDateTime.of(2026, 1, 1, 21, 0),
+            LocalDateTime.of(2026, 1, 2, 23, 0),
+            LocalDateTime.of(2026, 1, 2, 3, 0),
+        )
+
+        // when
+        val time: LocalTime = sleepService.calculateAverage(times)
+
+        // then
+        Assertions.assertEquals(LocalTime.of(23, 40), time)
+    }
+
+    @Test
     fun testCalculateMoodFrequency() {
         // given
         val moods = listOf(MorningMoodType.BAD, MorningMoodType.OK, MorningMoodType.BAD, MorningMoodType.BAD)
