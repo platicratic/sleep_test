@@ -10,10 +10,10 @@ import com.noom.interview.fullstack.sleep.domain.repository.UserRepository
 import com.noom.interview.fullstack.sleep.server.SleepApplication
 import com.noom.interview.fullstack.sleep.server.SleepApplication.Companion.INTEGRATION_TEST_PROFILE
 import com.noom.interview.fullstack.sleep.service.service.SleepService
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import io.mockk.every
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
+import org.junit.jupiter.api.*
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,11 +41,14 @@ class SleepServiceIntegrationTest {
 
     @BeforeAll
     fun setup() {
-        Clock.fixed(
-            Instant.parse("2026-02-10T00:00:00Z"),
-            ZoneOffset.UTC
-        )
+        mockkStatic(LocalDate::class)
+        every { LocalDate.now(ZoneOffset.UTC) } returns LocalDate.of(2026, 2, 10)
         userRepository.save(UserEntity(id = 1, firstName = "fName", lastName = "lName"))
+    }
+
+    @AfterAll
+    fun cleanup() {
+        unmockkAll()
     }
 
     @Test
