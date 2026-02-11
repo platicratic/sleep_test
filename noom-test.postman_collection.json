@@ -1,0 +1,179 @@
+{
+  "info": {
+    "_postman_id": "7125ddbe-dc07-4480-a372-220e8fc171f8",
+    "name": "noom-test",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "9828682"
+  },
+  "item": [
+    {
+      "name": "create-sleep-day-06",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"timeInBedStart\": \"2026-02-05T23:05:00.000Z\",\n    \"timeInBedEnd\": \"2026-02-06T06:07:00.000Z\",\n    \"morningMoodType\": \"GOOD\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/api/sleep?user_id=1",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "sleep"
+          ],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create-sleep-day-07",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"timeInBedStart\": \"2026-02-06T23:05:00.000Z\",\n    \"timeInBedEnd\": \"2026-02-07T06:10:00.000Z\",\n    \"morningMoodType\": \"GOOD\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/api/sleep?user_id=2",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "sleep"
+          ],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "2"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create-sleep-day-08",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"timeInBedStart\": \"2026-02-07T22:05:00.000Z\",\n    \"timeInBedEnd\": \"2026-02-08T07:15:00.000Z\",\n    \"morningMoodType\": \"GOOD\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/api/sleep?user_id=1",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "sleep"
+          ],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create-sleep-day-09",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"timeInBedStart\": \"2026-02-08T22:00:00.000Z\",\n    \"timeInBedEnd\": \"2026-02-09T07:35:00.000Z\",\n    \"morningMoodType\": \"OK\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/api/sleep?user_id=1",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "sleep"
+          ],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get-last-night-sleep",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:8080/api/sleep?user_id=1",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "sleep"
+          ],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "1"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get-last-30-average",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}
