@@ -171,7 +171,24 @@
       "name": "get-last-30-average",
       "request": {
         "method": "GET",
-        "header": []
+        "header": [],
+        "url": {
+          "raw": "localhost:8080/api/sleep-averages?user_id=1",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "sleep-averages"
+          ],
+          "query": [
+            {
+              "key": "user_id",
+              "value": "1"
+            }
+          ]
+        }
       },
       "response": []
     }
